@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Road Type Detection Model</title>
+	<style>
+		body {
+			font-family: sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+		h1 {
+			margin: 2rem 0;
+			text-align: center;
+		}
+		form {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin: 2rem 0;
+		}
+		label {
+			font-size: 1.2rem;
+			margin: 1rem 0;
+		}
+		input[type="file"] {
+			margin: 1rem 0;
+		}
+		button[type="submit"] {
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+			border-radius: 0.5rem;
+			padding: 1rem 2rem;
+			font-size: 1.2rem;
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+		button[type="submit"]:hover {
+			background-color: #0056b3;
+		}
+		#prediction {
+			font-size: 1.2rem;
+			text-align: center;
+			margin: 2rem 0;
+		}
+	</style>
+</head>
+<body>
+	<h1>Road Type Detection Model</h1>
+
+	<form method="POST" action="/predict" enctype="multipart/form-data">
+		<label for="image">Select an image:</label>
+		<input type="file" name="image" id="image">
+		<button type="submit">Predict</button>
+	</form>
+
+	<div id="prediction"></div>
+
+	<script>
+		// Send image to server for prediction when form is submitted
+		document.querySelector('form').addEventListener('submit', function(event) {
+			event.preventDefault();
+
+			var form = event.target;
+			var formData = new FormData(form);
+
+			fetch('/predict', {
+				method: 'POST',
+				body: formData
+			})
+			.then(response => response.json())
+			.then(data => {
+				var prediction = data.prediction;
+				document.querySelector('#prediction').innerHTML = 'Prediction: ' + prediction;
+			});
+		});
+	</script>
+
+</body>
+</html>
